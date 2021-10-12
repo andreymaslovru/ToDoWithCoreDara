@@ -79,7 +79,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             self.present(alert, animated: true)
         }))
         sheet.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
-            self.deleteItem(item: self.models[indexPath.row])
+            let item = self.models[indexPath.row]
+            self.deleteItem(item: item)
         }))
         
         present(sheet, animated: true)
@@ -118,6 +119,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         do {
             try context.save()
+            getAllItems()
         } catch let error {
             print(error)
         }
@@ -128,10 +130,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         do {
             try context.save()
-            
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
+            getAllItems()
         } catch let error {
             print(error)
         }
