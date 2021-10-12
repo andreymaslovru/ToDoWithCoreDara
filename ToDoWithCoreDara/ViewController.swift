@@ -62,7 +62,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         let item = models[indexPath.row]
         
-        let sheet = UIAlertController(title: "Edit", message: "Edit a task", preferredStyle: .actionSheet)
+        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
         sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         sheet.addAction(UIAlertAction(title: "Edit", style: .default, handler: { _ in
