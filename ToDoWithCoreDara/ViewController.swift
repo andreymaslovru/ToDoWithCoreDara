@@ -9,6 +9,7 @@ import UIKit
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     let tableView: UITableView = {
@@ -24,6 +25,22 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tableView.dataSource = self
         tableView.delegate = self
         tableView.frame = view.bounds
+        getAllItems()
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTapAdd))
+    }
+    
+    @objc private func didTapAdd() {
+        let alert = UIAlertController(title: "New TODO", message: "Tape a new task", preferredStyle: .alert)
+        
+        alert.addTextField(configurationHandler: nil)
+        
+        alert.addAction(UIAlertAction(title: "Add", style: .cancel, handler: { [weak self] _ in
+            guard let field = alert.textFields?.first, let text = field.text, !text.isEmpty else { return }
+            self?.createItem(name: text)
+        }))
+        
+        present(alert, animated: true)
     }
     
     private var models = [ToDoListItem]()
@@ -36,7 +53,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let model = models[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        cell.textLabel?.text = model.name
+        cell.textLabel?.text = "\(model.name) - \(model.createdAt)"
         return cell
     }
     
@@ -62,6 +79,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         do {
             try context.save()
+            getAllItems()
         } catch let error {
             print(error)
         }
